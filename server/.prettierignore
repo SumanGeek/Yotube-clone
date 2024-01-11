@@ -1,0 +1,5 @@
+.env
+*.env
+.env*
+/node_module
+/.vs_code
