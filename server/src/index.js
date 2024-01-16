@@ -13,5 +13,5 @@ connectDB()
     });
   })
   .catch((err) => {
-    console.log(`Mongooo DB connection failed, ${err}`);
+    console.log(`Server is not listening in port 8000, ${err}`);
   });
