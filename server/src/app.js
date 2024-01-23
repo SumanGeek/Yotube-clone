@@ -27,6 +27,5 @@ app.use(
 
 //import router
 import { router } from "./routes/user.route.js";
-
 app.use("/api/v1/users", router);
 export { app };
