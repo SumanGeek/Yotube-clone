@@ -17,7 +17,8 @@ const uploadOnCloud = async (fileName) => {
       resource_type: "auto",
     });
     //after upload has been done sucessfully
-    console.log("file has been uploaded sucessfully", response.url);
+    // console.log("file has been uploaded sucessfully", response.url);
+    fs.unlinkSync(fileName);
     return response;
   } catch (error) {
     fs.unlinkSync(fileName);

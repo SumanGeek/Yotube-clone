@@ -5,7 +5,7 @@ import { uploadOnCloud } from "../utils/cloudinary.js";
 import { ApiResponse } from "../utils/ApiResponse.js";
 const registerUser = asyncHandle(async (req, res) => {
   //get users details from frontend
-  const { name, email, password, fullName } = req.body;
+  const { userName, email, password, fullName } = req.body;
 
   //check for validation
   if (
@@ -15,7 +15,7 @@ const registerUser = asyncHandle(async (req, res) => {
   }
 
   //check weather user already exist or not
-  const exitedUser = User.findOne({
+  const exitedUser = await User.findOne({
     $or: [{ userName }, { email }], // if there is username or email in the database
   });
   if (exitedUser) {
@@ -24,18 +24,24 @@ const registerUser = asyncHandle(async (req, res) => {
 
   //to check the cover image and avatar Image
   const avatarLocalpath = req.files?.avatar[0]?.path;
-  const imageLocalpath = req.files?.coverImage[0]?.path;
+  // const imageLocalpath = req.files?.coverImage?.path;
+
+  let imageLocalpath;
+  if (req.files && Array.isArray(req.files.coverImage) && req.files.coverImage.length > 0) {
+    imageLocalpath = req.files.coverImage[0].path
+    
+  }
 
   if (!avatarLocalpath) {
     throw new ApiError(408, "Avatar not found");
   }
 
   //upload avatar and cover Image to cloudinary
-  const avatarUpload = await uploadOnCloud(avatarLocalpath);
-  const imageUpload = await uploadOnCloud(imageLocalpath);
+  const avatar = await uploadOnCloud(avatarLocalpath);
+  const coverImage = await uploadOnCloud(imageLocalpath);
 
   //check weather avatar is uploaded to database or not\
-  if (!avatarUpload) {
+  if (!avatar) {
     throw new ApiError(408, "Failed to upload avatar image to database");
   }
 
@@ -45,8 +51,8 @@ const registerUser = asyncHandle(async (req, res) => {
     password,
     userName: userName.toLowerCase(),
     fullName,
-    avatarUpload: avatarUpload.url, // upload the url of cloudinary where the image is stored
-    imageLocalpath: imageUpload?.url || "",
+    avatar: avatar.url, // upload the url of cloudinary where the image is stored
+    coverImage: coverImage?.url || "",
   });
 
   //remove password and refresh token from database
