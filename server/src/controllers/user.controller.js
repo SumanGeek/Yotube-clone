@@ -7,7 +7,7 @@ const registerUser = asyncHandle(async (req, res) => {
   //get users details from frontend
   const { userName, email, password, fullName } = req.body;
 
-  //check for validation
+  //check for validation--- if some feilds are empty throw the error
   if (
     [userName, email, password, fullName].some((feild) => feild?.trim() === "")
   ) {
@@ -52,7 +52,7 @@ const registerUser = asyncHandle(async (req, res) => {
     userName: userName.toLowerCase(),
     fullName,
     avatar: avatar.url, // upload the url of cloudinary where the image is stored
-    coverImage: coverImage?.url || "",
+    coverImage: coverImage?.url || '', // cover image can be empty
   });
 
   //remove password and refresh token from database
