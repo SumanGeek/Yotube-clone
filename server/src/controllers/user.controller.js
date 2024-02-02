@@ -36,12 +36,12 @@ const registerUser = asyncHandle(async (req, res) => {
     throw new ApiError(400, "All feilds are required");
   }
 
-  //check weather user already exist or not
+  //check weather user already exist or not //database call
   const exitedUser = await User.findOne({
-    $or: [{ userName }, { email }], // if there is username or email in the database
+    $or: [{ userName }], // if there is username or email in the database
   });
   if (exitedUser) {
-    throw new ApiError(408, "Email or username already taken");
+    throw new ApiError(408, " username already taken");
   }
 
   //to check the cover image and avatar Image
@@ -139,6 +139,7 @@ const loginUser = asyncHandle(async (req, res) => {
   };
 
   //returning response with tokens // setting cookies while returning response
+  //set cookies as refresh token and access token
   return res
     .status(200)
     .cookie("refreshToken", refreshToken, options)

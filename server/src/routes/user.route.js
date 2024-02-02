@@ -30,8 +30,8 @@ router.route("/register").post(
 
 router.route("/login").post(loginUser);
 
-router.route("/logout").post(verifyJWT, logoutUser);
+router.route("/logout").post(verifyJWT, logoutUser); //this route has middleware
 
-router.route("/refresh-token").post( refreshAccessToken);
+router.route("/refresh-token").post(refreshAccessToken);
 
 export { router };
